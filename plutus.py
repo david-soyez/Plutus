@@ -7,6 +7,7 @@ import pickle
 import hashlib
 import binascii
 import multiprocessing
+import time
 from ellipticcurve.privateKey import PrivateKey
 
 DATABASE = r'database/MAR_15_2021/'
@@ -111,6 +112,9 @@ def main(database):
     functions are relatively fast, it is better to combine them all into 
     one process.
     """
+    a = 0
+    start = time.time()
+    total = 0
     while True:
         private_key = generate_private_key()			# 0.0000061659 seconds
         public_key = private_key_to_public_key(
@@ -118,6 +122,13 @@ def main(database):
         address = public_key_to_address(public_key)		# 0.0000801390 seconds
         process(private_key, public_key, address,
                 database) 	# 0.0000026941 seconds
+        a += 1
+        if a == 1000:
+            total = time.time() - start
+            a = 0
+            start = time.time()
+        if total > 0:
+            print(total)
         # --------------------
         # 0.0032457721 seconds
 
